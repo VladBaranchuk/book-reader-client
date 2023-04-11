@@ -34,26 +34,6 @@ const Home: FC = () => {
 
     return (
         <div>
-            <Box sx={{display: 'flex', flexDirection: 'row', width: '30vw', alignItems: 'center', justifyContent: 'center', margin: '30px auto'}}>
-                <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    sx={{m:0}}
-                    size='small'
-                    value={search}
-                    onChange={handleSearch}
-                />
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    onClick={handleSearch}
-                    sx={{ ml: 1, width: '50px' }}
-                >
-                    Поиск
-                </Button>
-            </Box>
             <Catalog catalog={books}/>
         </div>  
     )
