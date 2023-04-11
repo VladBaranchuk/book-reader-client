@@ -1,5 +1,4 @@
 import { Box, Button, Card, CardActions, CardMedia, Rating, Typography } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
 import { FC, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { deleteBook, getBook } from '../../../http-requests'
@@ -137,7 +136,7 @@ const Book: FC = () => {
                                 <Box>
                                     {
                                         (role === "Administrator") && 
-                                        <Button variant="contained" sx={{width: '36px'}}><EditIcon /></Button>
+                                        <Button variant="contained" sx={{width: '36px'}}>Edit</Button>
                                     }
                                 </Box>
                             </Box>

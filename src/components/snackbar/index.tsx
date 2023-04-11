@@ -1,9 +1,6 @@
 import { useContext } from 'react';
 import { readerContext } from '../reader/Reader';
-
-import { TransitionProps } from '@material-ui/core/transitions';
-import { Snackbar, SnackbarOrigin } from '@mui/material';
-import { Slide } from '@material-ui/core';
+import { Slide, SlideProps, Snackbar, SnackbarOrigin } from '@mui/material';
 
 function GlobalSnackbar() {
   const context = useContext(readerContext)
@@ -11,7 +8,7 @@ function GlobalSnackbar() {
 
   const { isSnackbar, snackbarMessage } = context
 
-  const transition = (props: TransitionProps) => {
+  const transition = (props: SlideProps) => {
     return <Slide {...props} direction="up" />;
   }
 

@@ -295,7 +295,7 @@ const AdminBar: FC = () => {
                                     )}
                                 </ImageUploading>
                                 <Button sx={{mt: 1.5, width: '255px'}} color={inputChange} variant="outlined" component="label">
-                                    Загрузить файл : {uploadBook.bookFile?.text}
+                                    Загрузить файл : {uploadBook.bookFile.arrayBuffer.name}
                                     <input hidden type="file" accept="application/epub" onChange={uploadFileHandler} />
                                 </Button>
                             </Box>
