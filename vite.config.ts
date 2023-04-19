@@ -6,9 +6,6 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "@mui/material": "@material-ui/core",
-      "@mui/icons-material": "@material-ui/icons",
-      "@mui/lab": "@material-ui/lab",
       epubjs: "epubjs/dist/epub.js"
     }
   }
