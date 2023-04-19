@@ -350,7 +350,7 @@ const AdminBar: FC = () => {
                         </Box>
                         <Box sx={{mt: 3}}>
                             <Button variant="contained" color={newCategoryChange} onClick={createCategoryHandler} component="label">
-                                Добавить автора
+                                Добавить категорию
                             </Button>               
                         </Box>
                     </Box>
