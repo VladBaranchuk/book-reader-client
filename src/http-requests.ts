@@ -200,6 +200,10 @@ export const getCategory = (categoryId: string) =>
 export const updateCategory = (categoryId: string, body: UpdateCategoryRequest) => 
     request<UpdateCategoryResponse>(`${host}/api/categories/${categoryId}`, header("POST", JSON.stringify(body), true, true));
 
+export const searchCategories = (query: string) => 
+    request<GetCategoriesResponse>(`${host}/api/categories/search?query=${query}`, header("GET", undefined, true));
+
+
 
 // Note controller
 export const createNote = (body: CreateNoteRequest) => 

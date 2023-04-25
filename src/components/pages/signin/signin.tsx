@@ -67,7 +67,7 @@ const SignIn: React.FC = () => {
                 }}
                 >
                     <Typography component="h1" variant="h5">
-                        Sign in
+                        Вход
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                         <TextField
@@ -75,7 +75,7 @@ const SignIn: React.FC = () => {
                             required
                             fullWidth
                             id="email"
-                            label="Email Address"
+                            label="Email"
                             name="email"
                             value={signIn.email}
                             onChange={handleEmail}
@@ -89,7 +89,7 @@ const SignIn: React.FC = () => {
                             name="password"
                             value={signIn.password}
                             onChange={handlePassword}
-                            label="Password"
+                            label="Пароль"
                             type="password"
                             id="password"
                             autoComplete="current-password"
@@ -100,11 +100,11 @@ const SignIn: React.FC = () => {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                        Sign In
+                        Войти
                         </Button>
                         <Grid container>
                         <Grid item>
-                            <Link to="/signup">"Don't have an account? Sign Up"</Link>
+                            <Link to="/signup">"У вас нет аккаунта? Зарегистрироваться"</Link>
                         </Grid>
                         </Grid>
                     </Box>

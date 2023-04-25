@@ -145,28 +145,28 @@ function Panel() {
             <IconButton size="large" aria-label="bookmark-list" color="inherit" onClick={toggleBookmarkDrawer}>
               <FormatListBulletedOutlinedIcon />
             </IconButton>
-            <IconButton size="large" aria-label="search" color="inherit" onClick={toggleSearchDrawer}>
+             <IconButton size="large" aria-label="search" color="inherit" onClick={toggleSearchDrawer}>
               <SearchIcon />
-            </IconButton>
-            <IconButton size="large" aria-label="fullscreen" color="inherit" onClick={toggleFullScreen}>
+            </IconButton> 
+            {/* <IconButton size="large" aria-label="fullscreen" color="inherit" onClick={toggleFullScreen}>
               <FullscreenIcon />
-            </IconButton>
+            </IconButton> */}
 
-            <FileReaderInput as="buffer" onChange={handleBookFileChange}>
+            {/* <FileReaderInput as="buffer" onChange={handleBookFileChange}>
               <IconButton size="large" aria-label="file-upload" color="inherit">
                 <FileUploadIcon />
               </IconButton>
-            </FileReaderInput>
+            </FileReaderInput> */}
 
 
-            <IconButton
+            {/* <IconButton
               size="large"
               aria-label="display more actions"
               edge="end"
               color="inherit"
             >
               <MoreIcon />
-            </IconButton>
+            </IconButton> */}
 
             <IconButton size="large" aria-label="hide" color="inherit" sx={{ transform: 'rotate(-90deg)' }} onClick={hidePanelBar}>
               <DoubleArrowRoundedIcon />

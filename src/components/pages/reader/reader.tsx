@@ -16,6 +16,8 @@ const ReaderPage: FC = () => {
         
         getFile(id!)
         .then(x => setFileInfo(x!))
+
+        
     }, []) 
 
     return (

@@ -1,13 +1,13 @@
 import { FC, useState } from 'react'
-import { User } from '../../types'
+import { User } from '../../../../types'
 import { Avatar, Button, Card, Typography } from '@mui/material'
-import { lockout, unlocked } from '../../http-requests'
+import { lockout, unlocked } from '../../../../http-requests'
 
 interface IData{
     item: User
 }
 
-const DataGridItem: FC<IData> = ({item}) => {
+const UsersDataGridItem: FC<IData> = ({item}) => {
 
     const [user, setUser] = useState<User>(item!);
 
@@ -49,4 +49,4 @@ const DataGridItem: FC<IData> = ({item}) => {
     )
 }
 
-export default DataGridItem
+export default UsersDataGridItem
