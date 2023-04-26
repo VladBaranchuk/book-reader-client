@@ -25,9 +25,7 @@ const Header: FC = () => {
         <div style={{background: '#fe4e1c', width: '100%', height: '50px', display: 'flex'}}>
             <div style={{width: '25%', justifyContent: 'center', height: '50px'}}>
                 <Link to='/'>
-                    <Button sx={{ my: 2, color: 'white', display: 'block', margin: '8px' }}>
-                        LOGO
-                    </Button>
+                    <img height="40px" style={{margin: '5px 10px'}} src="logo.png"/>
                 </Link>
             </div>
             <div style={{width: '50%', height: 'inherit'}}>

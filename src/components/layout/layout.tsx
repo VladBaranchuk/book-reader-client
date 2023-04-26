@@ -10,10 +10,10 @@ const Layout: FC<Props> = ({children}) => {
     return (
         <>
         <Header/>
-            <div style={{width: '99vw', minHeight: '89.6vh'}}>
+            <div style={{width: '98vw', minHeight: '89.6vh'}}>
                 {children}
             </div>
-        <Footer/>
+        {/* <Footer/> */}
         </>
     )
 }

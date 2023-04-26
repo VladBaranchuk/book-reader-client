@@ -15,7 +15,6 @@ export const readerContext = React.createContext<EpubReaderState>(null)
 
 function Reader(props: IReaderProps) {
   const epubReaderState = useEpubReader(props)
-  console.log(props.url)
   return (
     <readerContext.Provider value={epubReaderState}>
       <Snackbar></Snackbar>

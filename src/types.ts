@@ -44,6 +44,24 @@ export type GetAuthorBooksResponse = {
     books: Book[]
 }
 
+export type UpdateAuthorRequest = {
+    id: string,
+    firstName: string,
+    lastName: string
+}
+
+export type UpdateAuthorRepsonse = {
+    id: string,
+    firstName: string,
+    lastName: string
+}
+
+export type DeleteAuthorResponse = {
+    id: string,
+    firstName: string,
+    lastName: string
+}
+
 
 // Book controller
 export type AddRatingRequest = {
@@ -403,6 +421,11 @@ export type UpdateCategoryRequest = {
 }
 
 export type UpdateCategoryResponse = {
+    id: string,
+    name: string
+}
+
+export type DeleteCategoryResponse = {
     id: string,
     name: string
 }

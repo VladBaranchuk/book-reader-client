@@ -1,7 +1,7 @@
-import { Box, Button, ButtonPropsColorOverrides, Rating } from "@mui/material";
+import { Box, Button, ButtonPropsColorOverrides, CircularProgress, Rating } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import React, { FC, useState } from "react";
-import { OverridableStringUnion } from '@mui/types';
+import CheckIcon from '@mui/icons-material/Check';
 import { addRating } from "../../../http-requests";
 import { AddRatingRequest } from "../../../types";
 
@@ -10,17 +10,24 @@ interface IAddRating {
     onClose: React.MouseEventHandler<HTMLButtonElement>
 }
 
+enum Success{
+    None,
+    Load,
+    Success
+}
+
 const AddRating: FC<IAddRating> = ({bookId, onClose}) => {
   
-    const [success, setSuccess] = useState<OverridableStringUnion<"inherit" | "primary" | "secondary" | "error" | "info" | "success" | "warning", ButtonPropsColorOverrides>>('info')
+    const [success, setSuccess] = useState<Success>(Success.None)
     const [rating, setRating] = useState<AddRatingRequest>({
         value: 0
     });
 
     const addRatingHandler = (event: React.SyntheticEvent<Element, Event>, value: number | null) => {
-        setRating(prev => ({...prev, value: value!}))
-        addRating(bookId, rating)
-        .then(result => setSuccess('success'))
+        setRating({value: value!});
+        setSuccess(Success.Load)
+        addRating(bookId, {value: value!})
+        .then(result => setSuccess(Success.Success))
     }
 
   return (
@@ -44,21 +51,33 @@ const AddRating: FC<IAddRating> = ({bookId, onClose}) => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 width: '250px',
-                height: '150px',
                 background: 'white',
                 borderRadius: '8px'
             }}>
                 <Box sx={{width: '100%', display: 'flex', justifyContent: 'end'}}>
-                    <Button sx={{mb:2, color: 'gray'}} onClick={onClose} endIcon={<CloseIcon/>}/>
+                    <Button sx={{ color: 'gray', minWidth: '32px'}}><CloseIcon/></Button>
                 </Box>
-                <Rating
-                    value={rating.value}
-                    precision={1}
-                    max={5}
-                    name="unique-rating"
-                    onChange={addRatingHandler}
-                />
-                <Button sx={{mt: 3, mb:1}} color={success} onClick={onClose}>Ok</Button>
+                    <Rating
+                        value={rating.value}
+                        precision={1}
+                        max={5}
+                        name="unique-rating"
+                        onChange={addRatingHandler}
+                        sx={{height: '40px', display: 'flex', alignItems: 'center'}}
+                    />
+                {
+                    success === Success.None ?
+                        <Button sx={{m: 1}} onClick={onClose}>Ok</Button> :
+                        success === Success.Load ?
+                            <Box sx={{ display: 'flex' }}>
+                                <CircularProgress />
+                            </Box> :
+                            success === Success.Success &&
+                                <Button onClick={onClose} sx={{m: 1}}>
+                                    <CheckIcon sx={{color: "green"}}/>
+                                </Button>
+                }
+                
             </Box>
         </div>
     </React.Fragment>

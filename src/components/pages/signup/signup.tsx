@@ -70,7 +70,7 @@ const SignUp: FC = () => {
           }}
         >
           <Typography component="h1" variant="h5">
-            Sign up
+            Регистрация
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
@@ -84,7 +84,7 @@ const SignUp: FC = () => {
                   onChange={handleFirstName}
                   fullWidth
                   id="firstName"
-                  label="First Name"
+                  label="Имя"
                   autoFocus
                 />
               </Grid>
@@ -96,7 +96,7 @@ const SignUp: FC = () => {
                   value={signUp?.lastName}
                   onChange={handleLastName}
                   id="lastName"
-                  label="Last Name"
+                  label="Фамилия"
                   name="lastName"
                   autoComplete="family-name"
                 />
@@ -109,7 +109,7 @@ const SignUp: FC = () => {
                   value={signUp?.userName}
                   onChange={handleUserName}
                   id="username"
-                  label="Username"
+                  label="Псевдоним"
                   name="username"
                   autoComplete="email"
                 />
@@ -122,7 +122,7 @@ const SignUp: FC = () => {
                   value={signUp?.email}
                   onChange={handleEmail}
                   id="email"
-                  label="Email Address"
+                  label="Email"
                   name="email"
                   autoComplete="username"
                 />
@@ -134,7 +134,7 @@ const SignUp: FC = () => {
                   value={signUp?.password}
                   onChange={handlePassword}
                   name="password"
-                  label="Password"
+                  label="Пароль"
                   type="password"
                   id="password"
                   autoComplete="new-password"
@@ -147,12 +147,12 @@ const SignUp: FC = () => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              Зарегистрироваться
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link to="/signin">
-                  Already have an account? Sign in
+                  У вас уже есть аккаунт? Войти
                 </Link>
               </Grid>
             </Grid>

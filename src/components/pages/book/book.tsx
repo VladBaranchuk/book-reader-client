@@ -109,7 +109,21 @@ const Book: FC = () => {
                                 <Typography sx={{ml:3, mb:1}} variant="h6" color="text.secondary">
                                     <b>Описание:</b>
                                 </Typography>
-                                <Typography sx={{ml:5, mb: 3, width: '40vw'}} variant="body1" color="text.secondary">
+                                <Typography sx={{ml:5, mb: 3, height: '202px', width: '40vw', overflow:"auto",
+                                    scrollbarWidth: 'thin',
+                                    '&::-webkit-scrollbar': {
+                                    width: '0.4em',
+                                    },
+                                    '&::-webkit-scrollbar-track': {
+                                    background: "#f1f1f1",
+                                    },
+                                    '&::-webkit-scrollbar-thumb': {
+                                    backgroundColor: '#888',
+                                    },
+                                    '&::-webkit-scrollbar-thumb:hover': {
+                                    background: '#555'
+                                    }
+                                    }} variant="body1" color="text.secondary">
                                     {book?.description}
                                 </Typography>
                             </Box>
