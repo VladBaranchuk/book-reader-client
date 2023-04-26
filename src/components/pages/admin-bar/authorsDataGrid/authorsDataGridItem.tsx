@@ -1,24 +1,24 @@
 import { FC, useState } from 'react'
-import { Category } from '../../../../types'
-import { Box, Button, Card, SxProps, Theme, Typography } from '@mui/material'
+import { Author } from '../../../../types'
+import { Box, Button, Card, Typography } from '@mui/material'
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
 interface IData{
-    item: Category,
+    item: Author,
     edit: Function,
     remove: Function
 }
 
-const CategoriesDataGridItem: FC<IData> = ({item, edit, remove}) => {
-    const [category, setCategory] = useState<Category>(item!);
+const AuthorsDataGridItem: FC<IData> = ({item, edit, remove}) => {
+    const [author, setAuthor] = useState<Author>(item!);
 
     const editHandler = () => {
-        edit(category)
+        edit(author)
     }
 
     const removeHandler = () => {
-        remove(category)
+        remove(author)
     }
 
     return (
@@ -40,7 +40,7 @@ const CategoriesDataGridItem: FC<IData> = ({item, edit, remove}) => {
                 color: 'black'
             }}}>
                 <Typography variant="body2" color="text.secondary" sx={{pl: 1}}>
-                    <b>{category.name}</b>
+                    <b>{author.firstName + " " + author.lastName}</b>
                 </Typography>
                 <Box>
                     <Button onClick={editHandler} sx={{minWidth: '32px', '&:hover .MuiSvgIcon-root': { color: 'orange' }}}>
@@ -54,4 +54,4 @@ const CategoriesDataGridItem: FC<IData> = ({item, edit, remove}) => {
     )
 }
 
-export default CategoriesDataGridItem
+export default AuthorsDataGridItem

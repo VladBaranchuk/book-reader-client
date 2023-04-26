@@ -26,6 +26,7 @@ const UsersBar: FC = () => {
             <Box sx={{display: 'flex', flexDirection: 'row', width: '30vw', alignItems: 'center', justifyContent: 'center', margin: '30px auto'}}>
                 <TextField
                     margin="normal"
+                    placeholder='поиск'
                     required
                     fullWidth
                     sx={{m:0}}

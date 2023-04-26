@@ -22,6 +22,8 @@ import {
     CreateNoteRequest, 
     CreateNoteResponse, 
     CreateUserRequest, 
+    DeleteAuthorResponse, 
+    DeleteCategoryResponse, 
     DeleteNoteResponse, 
     Empty, 
     ErrorMessage, 
@@ -45,6 +47,8 @@ import {
     RemoveFromScheduledBooksResponse, 
     RemoveRatingResponse,
     SearchBooksRequest,
+    UpdateAuthorRepsonse,
+    UpdateAuthorRequest,
     UpdateBookResponse,
     UpdateCategoryRequest,
     UpdateCategoryResponse,
@@ -75,7 +79,16 @@ export const getAuthors = () =>
 export const getAuthorBooks = (authorId: string) => 
     request<GetAuthorBooksResponse>(`${host}/api/authors/${authorId}/books`, header("GET"));
 
+export const updateAuthor = (authorId: string, body: UpdateAuthorRequest) => 
+    request<UpdateAuthorRepsonse>(`${host}/api/authors/${authorId}`, header("PUT", JSON.stringify(body), true, true));
 
+export const searchAuthors = (query: string) => 
+    request<GetAuthorsResponse>(`${host}/api/authors/search?query=${query}`, header("GET", undefined, true));
+
+export const deleteAuthor = (authorId: string) => 
+    request<DeleteAuthorResponse>(`${host}/api/authors/${authorId}`, header("DELETE", undefined, true));
+
+    
 // Book controller
 export const addRating = (bookId: string, body: AddRatingRequest) =>
     request<AddRatingResponse>(`${host}/api/books/${bookId}/rating`, header("POST", JSON.stringify(body), true, true))
@@ -198,10 +211,13 @@ export const getCategory = (categoryId: string) =>
     request<GetCategoryResponse>(`${host}/api/categories/${categoryId}`, header("GET"));
 
 export const updateCategory = (categoryId: string, body: UpdateCategoryRequest) => 
-    request<UpdateCategoryResponse>(`${host}/api/categories/${categoryId}`, header("POST", JSON.stringify(body), true, true));
+    request<UpdateCategoryResponse>(`${host}/api/categories/${categoryId}`, header("PUT", JSON.stringify(body), true, true));
 
 export const searchCategories = (query: string) => 
     request<GetCategoriesResponse>(`${host}/api/categories/search?query=${query}`, header("GET", undefined, true));
+
+export const deleteCategory = (categoryId: string) => 
+    request<DeleteCategoryResponse>(`${host}/api/categories/${categoryId}`, header("DELETE", undefined, true));
 
 
 

@@ -1,15 +1,15 @@
 import { FC } from 'react'
-import { Category } from '../../../../types'
-import CategoriesDataGridItem from './categoriesDataGriditem'
+import { Author } from '../../../../types'
 import { Box } from '@mui/material'
+import AuthorsDataGridItem from './authorsDataGridItem'
 
-interface ICategoriesDataGrid {
-    data: Category[]
+interface IAuthorsDataGrid {
+    data: Author[]
     editHandler: Function,
     removeHandler: Function
 }
 
-const CateroiesDataGrid: FC<ICategoriesDataGrid> = ({data, editHandler, removeHandler}) => {
+const AuthorsDataGrid: FC<IAuthorsDataGrid> = ({data, editHandler, removeHandler}) => {
     return (
         <Box sx={{display: 'flex', width: '100%', height: '330px', alignItems: 'start', flexDirection: "column", overflow: "auto",
             scrollbarWidth: 'thin',
@@ -26,10 +26,10 @@ const CateroiesDataGrid: FC<ICategoriesDataGrid> = ({data, editHandler, removeHa
             background: '#555'
         }}}>
             {data?.map((item, index) => {
-                return <CategoriesDataGridItem key={index} item={item} edit={editHandler} remove={removeHandler}/>
+                return <AuthorsDataGridItem key={index} item={item} edit={editHandler} remove={removeHandler}/>
             })}
         </Box>
     )
 }
 
-export default CateroiesDataGrid
+export default AuthorsDataGrid
