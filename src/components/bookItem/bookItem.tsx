@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
@@ -12,36 +12,38 @@ interface IItem {
 
 const OrderItem: FC<IItem> = ({item}) => {
 
+  const [book, setBook] = useState<Book>(item!);
+
   return (
-    <Card sx={{ width: 300, m:2 }}>
-      <Link to={`/books/${item?.id}`}>
+    <Card sx={{ width: 200, m:2 }}>
+      <Link to={`/books/${book?.id}`}>
         <CardMedia
           component="img"
-          height="400"
-          image={item?.coverImageUrl}
-          alt="Paella dish"
+          height="300"
+          image={book?.coverImageUrl}
         />
       </Link>
       <CardContent>
-        <Link to={`/books/${item?.id}`}>
-          <Typography variant="h5" color="text.secondary">
-            {item?.title}
+        <Link to={`/books/${book?.id}`}>
+          <Typography color="text.secondary">
+            <b>{book?.title}</b>
+          </Typography>
+          <Typography color="text.secondary" sx={{fontSize: '14px', mt: 1}}>
+            Автор: {book?.authorName}
           </Typography>
         </Link>
       </CardContent>
-      <CardActions disableSpacing>
+      <CardActions>
         <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-          <Box sx={{mr:10}}>
-            <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-              <Rating name="read-only" value={item?.rating} readOnly precision={0.1} sx={{mr:1}} />
-              <Typography variant="body2" color="text.secondary" sx={{mr:1}}>
-                <b>{item?.rating.toFixed(1)}</b>
-              </Typography>
-            </Box>
-            <Typography sx={{ml:0.5}} variant="body2" color="text.secondary">
-              {item?.numberOfVoters}
+          <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+            <Rating name="read-only" value={book?.rating} readOnly precision={0.1} sx={{mr:1}} />
+            <Typography color="text.secondary" sx={{mr:1}}>
+              <b>{book?.rating.toFixed(1)}</b>
             </Typography>
           </Box>
+          <Typography color="text.secondary">
+            ({book?.numberOfVoters})
+          </Typography>
         </Box>
       </CardActions>
     </Card>

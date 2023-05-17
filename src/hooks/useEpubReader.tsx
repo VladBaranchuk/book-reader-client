@@ -6,6 +6,9 @@ import { IReaderProps } from "../components/reader/Reader"
 import useBookmarks, { addBookmarkFn, Bookmarks, removeBookmarkFn } from "./useBookmark"
 import useBookmarkDrawer from "./useBookmarkDrawer"
 import useSnackbar from "./useSnackbar"
+import useNotes, { Notes, addNoteFn, removeNoteFn } from "./useNote"
+import useNoteDrawer from "./useNoteDrawer"
+import { Note } from "../types"
 
 export type BookContents = Array<{
   href: string,
@@ -13,6 +16,7 @@ export type BookContents = Array<{
 }>
 
 export type EpubReaderState = {
+  bookId: string,
   ebookUrl: string,
   book: Book,
   catalogue: NavItem[] | null,
@@ -27,7 +31,9 @@ export type EpubReaderState = {
   bookContents: BookContents,
   initialFontSize: string,
   bookmarks: Bookmarks,
+  notes: Note[],
   currentCfi: string,
+  isNoteDrawer: boolean,
   isBookmarkDrawer: boolean,
   isSnackbar: boolean,
   snackbarMessage: string,
@@ -40,7 +46,10 @@ export type EpubReaderState = {
   searchBookContents: (searchString: string) => MatchSearches,
   addBookmark: addBookmarkFn,
   removeBookmark: removeBookmarkFn,
+  addNote: addNoteFn,
+  removeNote: removeNoteFn,
   toggleBookmarkDrawer: () => void,
+  toggleNoteDrawer: () => void,
   showToast: (message: string) => void
 } | null
 
@@ -48,12 +57,13 @@ export interface ILocationChangeProps {
   end: string, href: string, index: number, percentage: number, start: string
 }
 
-function useEpubReader({ url, fontSize, epubOptions }: IReaderProps): EpubReaderState {
+function useEpubReader({ bookId, url, fontSize, epubOptions }: IReaderProps): EpubReaderState {
   if (!url) return null
 
   const [ebookUrl, setEbookUrl] = useState(url)
   const { isSearchDrawer, toggleSearchDrawer } = useSearchDrawer()
   const { isBookmarkDrawer, toggleBookmarkDrawer } = useBookmarkDrawer()
+  const { isNoteDrawer, toggleNoteDrawer } = useNoteDrawer()
   const contentViewRef = useRef<HTMLDivElement>(null)
   const [catalogue, setCatalogue] = useState<NavItem[] | null>(null)
   const [isCatalogue, setIsCatalogue] = useState(false);
@@ -75,10 +85,10 @@ function useEpubReader({ url, fontSize, epubOptions }: IReaderProps): EpubReader
 
   const { bookContents, searchBookContents } = useBookContent(book)
   const { bookmarks, addBookmark, removeBookmark } = useBookmarks()
+  const { notes, addNote, removeNote } = useNotes(bookId);
 
   const init = async () => {
     const { toc } = await book.loaded.navigation
-    console.log(epubOptions)
     const node = contentViewRef.current as HTMLDivElement
     const width = window.getComputedStyle(node).getPropertyValue('width')
     const epubRendition = book.renderTo(node, { width, height: '100%' });
@@ -111,6 +121,7 @@ function useEpubReader({ url, fontSize, epubOptions }: IReaderProps): EpubReader
   }, [ebookUrl]);
 
   return {
+    bookId,
     ebookUrl,
     book,
     catalogue,
@@ -125,8 +136,10 @@ function useEpubReader({ url, fontSize, epubOptions }: IReaderProps): EpubReader
     bookContents,
     initialFontSize,
     bookmarks,
+    notes,
     currentCfi,
     isBookmarkDrawer,
+    isNoteDrawer,
     isSnackbar,
     snackbarMessage,
     isPanelBar,
@@ -139,6 +152,9 @@ function useEpubReader({ url, fontSize, epubOptions }: IReaderProps): EpubReader
     addBookmark,
     removeBookmark,
     toggleBookmarkDrawer,
+    addNote,
+    removeNote,
+    toggleNoteDrawer,
     showToast
   }
 }

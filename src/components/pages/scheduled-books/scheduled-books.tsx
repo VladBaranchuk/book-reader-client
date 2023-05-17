@@ -1,11 +1,11 @@
 import { Box, Pagination, Typography } from '@mui/material';
 import React, { FC, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-import { getFavoriteBooks } from '../../../http-requests'
+import { getScheduledBooks } from '../../../http-requests'
 import { GetBooksResponse} from '../../../types';
 import Catalog from '../../catalog/catalog';
 
-const FavoriteBooks: FC = () => {
+const ScheduledBooks: FC = () => {
 
     const {id} = useParams();
     const [books, setBooks] = useState<GetBooksResponse>();
@@ -13,19 +13,19 @@ const FavoriteBooks: FC = () => {
     const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
         navigate(`/favorite-books/${value}`);
 
-        getFavoriteBooks(value, 12)
+        getScheduledBooks(value, 12)
         .then(x => setBooks(x))
     };
 
     useEffect(() => {
-        getFavoriteBooks(Number(id), 12)
+        getScheduledBooks(Number(id), 12)
         .then(x => setBooks(x))
     }, [id]) 
 
     return (
         <div>
             <Typography variant="h5" color="text.secondary" sx={{width: '70vw', margin: '20px auto'}}>
-                <b>Избранные книги</b>
+                <b>Сохраненные книги</b>
             </Typography>
             <Catalog catalog={books?.books}/>
             <Box sx={{width: '70vw', margin: '20px auto 100px auto', display: 'flex', justifyContent: 'center'}}>
@@ -35,4 +35,4 @@ const FavoriteBooks: FC = () => {
     )
 }
 
-export default FavoriteBooks
+export default ScheduledBooks

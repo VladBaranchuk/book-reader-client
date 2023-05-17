@@ -1,11 +1,11 @@
 import { Box, Button } from '@mui/material'
-import { FC } from 'react'
+import { FC, useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { MyContext } from '../layout';
 
 const menu = [
     {name: 'Каталог', path: '/catalog/1', isAuth: false, role: "Guest"}
    ];
-   
 
 const Header: FC = () => {
 
@@ -21,8 +21,10 @@ const Header: FC = () => {
         navigate('/')
     }
 
+    var context = useContext(MyContext);
+
     return (
-        <div style={{background: '#fe4e1c', width: '100%', height: '50px', display: 'flex'}}>
+        <div style={{background: '#fe4e1c', width: '100%', height: '50px', display: context.read ? 'flex' : 'none'}}>
             <div style={{width: '25%', justifyContent: 'center', height: '50px'}}>
                 <Link to='/'>
                     <img height="40px" style={{margin: '5px 10px'}} src="logo.png"/>
@@ -49,7 +51,37 @@ const Header: FC = () => {
                         <Button
                         sx={{ my: 2, color: 'white', display: 'block', margin: '8px' }}
                         >
-                            Любимые книги
+                            Избранные
+                        </Button>
+                    </Link>
+                }
+
+                {(role === "User") && 
+                    <Link to="/current-books/1">
+                        <Button
+                        sx={{ my: 2, color: 'white', display: 'block', margin: '8px' }}
+                        >
+                            Текущие
+                        </Button>
+                    </Link>
+                }
+
+                {(role === "User") && 
+                    <Link to="/readed-books/1">
+                        <Button
+                        sx={{ my: 2, color: 'white', display: 'block', margin: '8px' }}
+                        >
+                            Прочитанные
+                        </Button>
+                    </Link>
+                }
+
+                {(role === "User") && 
+                    <Link to="/scheduled-books/1">
+                        <Button
+                        sx={{ my: 2, color: 'white', display: 'block', margin: '8px' }}
+                        >
+                            Сохраненные
                         </Button>
                     </Link>
                 }

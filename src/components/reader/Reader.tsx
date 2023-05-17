@@ -1,20 +1,24 @@
-import React, { useEffect } from "react"
+import React, { useContext, useEffect } from "react"
 import Catalogue from "../catalogue/Catalogue"
 import ContentView from "../contentView/ContentView"
 import Panel from "../panel/Panel"
 import useEpubReader, { EpubReaderState } from "../../hooks/useEpubReader"
 import Snackbar from "../snackbar"
+import { MyContext } from "../layout/layout"
 
 export interface IReaderProps {
+  bookId: string,
   url: string,
   fontSize?: string,
   epubOptions?: Object
 }
 
-export const readerContext = React.createContext<EpubReaderState>(null)
+export const readerContext = React.createContext<EpubReaderState>(null);
 
 function Reader(props: IReaderProps) {
-  const epubReaderState = useEpubReader(props)
+  const epubReaderState = useEpubReader(props);
+  const context = useContext(MyContext);
+  context.setFalse();
   return (
     <readerContext.Provider value={epubReaderState}>
       <Snackbar></Snackbar>

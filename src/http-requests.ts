@@ -52,7 +52,8 @@ import {
     UpdateBookResponse,
     UpdateCategoryRequest,
     UpdateCategoryResponse,
-    UpdateUserRequest
+    UpdateUserRequest,
+    UserBookResponse
 } from "./types";
 
 const host = "http://localhost:8080";
@@ -77,7 +78,7 @@ export const getAuthors = () =>
     request<GetAuthorsResponse>(`${host}/api/authors`, header("GET"));
 
 export const getAuthorBooks = (authorId: string) => 
-    request<GetAuthorBooksResponse>(`${host}/api/authors/${authorId}/books`, header("GET"));
+    request<GetAuthorBooksResponse>(`${host}/api/authors/${authorId}/books`, header("GET", undefined, true, false));
 
 export const updateAuthor = (authorId: string, body: UpdateAuthorRequest) => 
     request<UpdateAuthorRepsonse>(`${host}/api/authors/${authorId}`, header("PUT", JSON.stringify(body), true, true));
@@ -111,8 +112,6 @@ export const createBook = (uploadBook: CreateBookRequest) => {
     });
     form.append('coverImage', uploadBook.coverImage!);
     form.append('bookFile', uploadBook.bookFile!);
-
-    console.log(form)
 
     var response = request<CreateBookResponse>(`${host}/api/Books`, {
         method: "POST",
@@ -185,7 +184,7 @@ export const searchBooks = (page: number, size: number, body: SearchBooksRequest
     request<GetBooksResponse>(`${host}/api/books/search?page=${page}&size=${size}`, header("PUT", JSON.stringify(body) , true, true));
 
 export const getNotes = (bookId: string) => 
-    request<GetNotesResponse>(`${host}/api/books/${bookId}/notes`, header("GET"));
+    request<GetNotesResponse>(`${host}/api/books/${bookId}/notes`, header("GET", undefined, true));
 
 export const createComment = (bookId: string, body: CreateCommentRequest) => 
     request<CreateCommentResponse>(`${host}/api/books/${bookId}/comments`, header("POST", JSON.stringify(body) , true, true));
@@ -193,11 +192,20 @@ export const createComment = (bookId: string, body: CreateCommentRequest) =>
 export const deleteComment = (bookId: string, commentId: string) => 
     request<CreateCommentResponse>(`${host}/api/books/${bookId}/comments/${commentId}`, header("DELETE", undefined , true, false));
 
-// export const getFile = (bookId: string) =>
-//     requestBlob(`${host}/api/books/${bookId}/file`, header("GET", undefined, true, false));
-
 export const getFile = (bookId: string) =>
     request<FileInfo>(`${host}/api/books/${bookId}/file`, header("GET", undefined, true, false));
+
+export const isCurrentBook = (bookId: string) =>
+    request<UserBookResponse>(`${host}/api/books/current/${bookId}/is-current`, header("GET", undefined, true, false));
+
+export const isFavoriteBook = (bookId: string) =>
+    request<UserBookResponse>(`${host}/api/books/favorite/${bookId}/is-favorite`, header("GET", undefined, true, false));
+
+export const isReadedBook = (bookId: string) =>
+    request<UserBookResponse>(`${host}/api/books/readed/${bookId}/is-readed`, header("GET", undefined, true, false));
+
+export const isScheduledBook = (bookId: string) =>
+    request<UserBookResponse>(`${host}/api/books/scheduled/${bookId}/is-scheduled`, header("GET", undefined, true, false));
 
 
 // Category controller
@@ -230,8 +238,23 @@ export const deleteNote = (noteId: string) =>
 
 
 // User controller
-export const addAvatar = (userId: string, header: RequestInit) => 
-    request<GetUserResponse>(`${host}/api/users/${userId}/avatar`, header);
+export const addAvatar = (userId: string, file: File) => {
+    const form = new FormData();
+
+    form.append('avatar', file);
+
+    var response = request<GetUserResponse>(`${host}/api/users/${userId}/avatar`, {
+        method: "POST",
+        headers: {
+            Accept: 'application/json',
+            ContentType: 'application/json; charset=utf8',
+            Authorization: `Bearer ${token}`
+        },
+        body: form
+    });
+
+    return response;
+}
 
 export const createUser = (body: CreateUserRequest) => 
     request<GetUserResponse>(`${host}/api/users`, header("POST", JSON.stringify(body), false, true));
@@ -264,22 +287,6 @@ export const lockout = (userId: string) =>
 
 export const unlocked = (userId: string) => 
     request<GetUserResponse>(`${host}/api/users/${userId}/unlocked`, header("POST", undefined, true));
-
-
-
-
-
-// export const getRoleByUserId = (userId: string) => 
-//     request<GetRoleResponse>(`${host}/api/Users/${userId}/role`, header("GET", undefined, true));
-
-// export const updateUserById = (userId: string, header: RequestInit) =>
-//     request<UpdateUserResponse>(`${host}/api/Users/${userId}`, header);
-
-// export const IsFavoriteBook = (userId: string, bookId: string) => 
-//     request<IsFavoriteBookResponse>(`${host}/api/Users/${userId}/favorite-books/${bookId}`, header("GET", undefined, true));
-
-
-
 
 const header = (method: string, requestBody: string = "", isAuth: boolean = false, isBody: boolean = false): RequestInit => {
     

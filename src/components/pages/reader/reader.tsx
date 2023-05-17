@@ -12,17 +12,14 @@ const ReaderPage: FC = () => {
         urlExpiresAtUtc: new Date()
     });
     
-    useEffect(() => {
-        
+    useEffect(() => {  
         getFile(id!)
         .then(x => setFileInfo(x!))
-
-        
     }, []) 
 
     return (
         <>
-            <Reader url={fileInfo!.tempUrl}/>
+            <Reader bookId={id!} url={fileInfo!.tempUrl}/>
         </>  
     )
 }

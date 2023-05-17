@@ -3,18 +3,20 @@ import { ChangeEvent, useContext, useRef } from "react";
 import { Toolbar, AppBar, Box, Typography, Slide, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import MoreIcon from '@mui/icons-material/MoreVert';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
-import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import DoubleArrowRoundedIcon from '@mui/icons-material/DoubleArrowRounded';
 import { readerContext } from "../reader/Reader"
 import SearchDrawer from "../searchDrawer/index"
 import BookmarkDrawer from "../bookmarkDrawer";
 import FormatSizeOutlinedIcon from '@mui/icons-material/FormatSizeOutlined';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
+import CloseIcon from '@mui/icons-material/Close';
 import FileReaderInput from 'react-file-reader-input'
+import { MyContext } from "../layout/layout";
+import { useNavigate, useParams } from "react-router-dom";
+import NotesIcon from '@mui/icons-material/Notes';
+import NoteDrawer from "../noteDrawer/noteDrawer";
 
 function Panel() {
   const context = useContext(readerContext)
@@ -22,19 +24,23 @@ function Panel() {
 
   const { isBookmarkDrawer: isSearchDrawer, toggleSearchDrawer, toggleCatalogue, rendition,
     isPanelBar, setIsPanelBar,
-    initialFontSize, addBookmark, removeBookmark, currentCfi, bookmarks, toggleBookmarkDrawer, showToast, setEbookUrl } = context
+    initialFontSize, addBookmark,
+    removeBookmark, currentCfi,
+    bookmarks, toggleBookmarkDrawer,
+    showToast, setEbookUrl, toggleNoteDrawer } = context
 
-  const appbarRef = useRef<HTMLDivElement>(null)
+  const appbarRef = useRef<HTMLDivElement>(null);
+  var contextt = useContext(MyContext);
 
   let fontSize = initialFontSize
   const isBookmarkAdded = bookmarks.find(bookmark => bookmark.cfi === currentCfi);
 
-  const toggleFullScreen = async () => {
-    if (!document.fullscreenElement) {
-      await document.body.requestFullscreen()
-    } else {
-      await document.exitFullscreen()
-    }
+  const {id} = useParams();
+  const navigate = useNavigate();
+  
+  const closeButton = () => {
+    contextt.setTrue()
+    navigate(`/books/${id}`)
   }
 
   const resize = (isFullHeight: boolean) => {
@@ -89,24 +95,11 @@ function Panel() {
     rendition.current?.themes.fontSize(fontSize)
   }
 
-  const handleBookFileChange = (events: ChangeEvent<HTMLInputElement>, results: FileReaderInput.Result[]) => {
-    if (!results.length) return
-
-    const [e, file] = results[0]
-    if (file.type !== 'application/epub+zip') {
-      return showToast("Please choose an epub file")
-    }
-
-    const result = (e.target as FileReader)?.result as string
-    setEbookUrl(result)
-
-    events.target.setAttribute('value', '')
-  }
-
   return (
     <Box sx={{ flexGrow: 1}}>
       <SearchDrawer></SearchDrawer>
       <BookmarkDrawer></BookmarkDrawer>
+      <NoteDrawer></NoteDrawer>
 
       <div className="right-fixed-box">
         <IconButton size="large" aria-label="hide" color="inherit" sx={{ transform: 'rotate(90deg)' }} onClick={ShowPanelBar}>
@@ -114,7 +107,7 @@ function Panel() {
         </IconButton>
       </div>
       <Slide direction="down" in={isPanelBar} mountOnEnter unmountOnExit>
-        <AppBar ref={appbarRef} className="appbar" position="static" sx={{ position: 'relative', zIndex: 3, width: '100%', backgroundColor: '#fe4e1c', boxShadow: 'none', borderTop: '1px solid white' }}>
+        <AppBar ref={appbarRef} className="appbar" position="static" sx={{ position: 'relative', zIndex: 3, width: '100%', backgroundColor: '#fe4e1c', boxShadow: 'none' }}>
           <Toolbar variant="dense">
             <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={toggleCatalogue}>
               <MenuIcon />
@@ -130,6 +123,10 @@ function Panel() {
             >
             </Typography>
 
+
+            <IconButton size="large" aria-label="file-upload" color="inherit" onClick={toggleNoteDrawer}>
+              <NotesIcon />
+            </IconButton>
             <IconButton size="large" aria-label="toggle-fontsize" color="inherit" onClick={toggleFontSize}>
               <FormatSizeOutlinedIcon />
             </IconButton>
@@ -148,29 +145,17 @@ function Panel() {
              <IconButton size="large" aria-label="search" color="inherit" onClick={toggleSearchDrawer}>
               <SearchIcon />
             </IconButton> 
-            {/* <IconButton size="large" aria-label="fullscreen" color="inherit" onClick={toggleFullScreen}>
-              <FullscreenIcon />
-            </IconButton> */}
-
-            {/* <FileReaderInput as="buffer" onChange={handleBookFileChange}>
-              <IconButton size="large" aria-label="file-upload" color="inherit">
-                <FileUploadIcon />
-              </IconButton>
-            </FileReaderInput> */}
-
-
-            {/* <IconButton
-              size="large"
-              aria-label="display more actions"
-              edge="end"
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton> */}
+            
+            <IconButton size="large" aria-label="fullscreen" color="inherit" onClick={closeButton}>
+              <CloseIcon />
+            </IconButton>
 
             <IconButton size="large" aria-label="hide" color="inherit" sx={{ transform: 'rotate(-90deg)' }} onClick={hidePanelBar}>
               <DoubleArrowRoundedIcon />
             </IconButton>
+
+            
+
           </Toolbar>
         </AppBar>
       </Slide>

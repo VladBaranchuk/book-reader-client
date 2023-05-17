@@ -395,6 +395,11 @@ export type CreateCommentResponse = {
     comments: Comment[]
 }
 
+export type UserBookResponse = {
+    id: string,
+    isUserBook: boolean
+}
+
 
 // Category controller
 export type CreateCategoryRequest = {
@@ -434,21 +439,21 @@ export type DeleteCategoryResponse = {
 // Note controller
 export type CreateNoteRequest = {
     bookId: string,
-    page: number,
+    cfiRange: string,
     text: string
 }
 
 export type CreateNoteResponse = {
     id: string,
-    page: number,
-    text: string,
+    cfiRange: string,
+    text: string
     createdAtUtc: Date
 }
 
 export type DeleteNoteResponse = {
     id: string,
-    page: number,
-    text: string,
+    cfiRange: string,
+    text: string
     createdAtUtc: Date
 }
 
@@ -531,13 +536,15 @@ export type Category = {
 export type Comment = {
     id: string,
     text: string,
-    createdAtUtc: Date
+    createdAtUtc: Date,
+    userName: string,
+    avatarUrl?: string
 }
 
 export type Note = {
     id: string,
-    page: number,
-    text: string,
+    cfiRange: string,
+    text: string
     createdAtUtc: Date
 }
 
