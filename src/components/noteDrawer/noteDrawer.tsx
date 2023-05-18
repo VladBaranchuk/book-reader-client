@@ -30,10 +30,8 @@ function NoteDrawer() {
       >
         <List sx={{ width: '300px', maxWidth: 360, bgcolor: 'background.paper' }} subheader={<ListSubheader>Notes</ListSubheader>}>
           {
-            notes.map((note, index) => (
-              <ListItemButton key={index} onClick={() => {
-                goToNote(note.cfiRange)
-              }}>
+            notes?.map((note, index) => (
+              <ListItemButton key={index} onClick={() => goToNote(note.cfiRange)}>
                 <ListItem alignItems="flex-start">
                   <ListItemText/>
                   {index+1 + ". " + note.text}
