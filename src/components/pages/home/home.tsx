@@ -18,10 +18,6 @@ const Home: FC = () => {
         authorId: ""
     });
 
-    // const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     setSearch(event.target.value)
-    // }
-
     const handleSearch = () => {
         searchBooks(1, 10, search)
         .then(x => setBooks(x?.books))

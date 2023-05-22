@@ -21,7 +21,7 @@ const Layout: FC<Props> = ({children}) => {
     return (
         <MyContext.Provider value={{read: value, setTrue: setTrue, setFalse: setFalse }}>
             <Header/>
-                <div style={{width: '98vw', minHeight: '89.6vh'}}>
+                <div style={{width: '100vw', minHeight: '89.6vh'}}>
                     {children}
                 </div>
             {/* <Footer/> */}

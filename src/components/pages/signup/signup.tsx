@@ -58,7 +58,7 @@ const SignUp: FC = () => {
             display: 'flex', 
             width: '100%', 
             height: '100%',
-            paddingTop: '200px',
+            paddingTop: '100px',
             flexDirection: 'column',
             justifyContent: 'center'}}>
         <CssBaseline />

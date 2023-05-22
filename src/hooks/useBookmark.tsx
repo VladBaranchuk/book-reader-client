@@ -18,7 +18,7 @@ export interface removeBookmarkFn {
 }
 
 export default function useBookmarks() {
-  const [bookmarks, setBookmarks] = useState<Bookmarks>([])
+  const [bookmarks, setBookmarks] = useState<Bookmarks>(localStorage.getItem('bookmarks') != null ? JSON.parse(localStorage.getItem('bookmarks')!) as BookmarkItem[] : [])
 
   const addBookmark: addBookmarkFn = (bookmark) => {
     const bookmarkWithTime = {
@@ -30,6 +30,11 @@ export default function useBookmarks() {
       ...bookmarks,
       bookmarkWithTime,
     ])
+    
+    localStorage.setItem('bookmarks', JSON.stringify([
+      ...bookmarks,
+      bookmarkWithTime
+    ]))
   }
 
   const removeBookmark = (cfi: string) => {

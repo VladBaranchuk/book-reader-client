@@ -11,7 +11,6 @@ function SearchDrawer() {
   const { rendition, searchBookContents, setCurretChapter } = context
   const [searchText, setSearchText] = useState('')
   const [matchSearches, setMatches] = useState<MatchSearches>([])
-
   const { isSearchDrawer, toggleSearchDrawer } = context
 
   const onSearchBookContents = async () => {

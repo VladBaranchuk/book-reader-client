@@ -23,6 +23,7 @@ import {
     CreateNoteResponse, 
     CreateUserRequest, 
     DeleteAuthorResponse, 
+    DeleteBookResponse, 
     DeleteCategoryResponse, 
     DeleteNoteResponse, 
     Empty, 
@@ -49,6 +50,7 @@ import {
     SearchBooksRequest,
     UpdateAuthorRepsonse,
     UpdateAuthorRequest,
+    UpdateBookRequest,
     UpdateBookResponse,
     UpdateCategoryRequest,
     UpdateCategoryResponse,
@@ -57,7 +59,6 @@ import {
 } from "./types";
 
 const host = "http://localhost:8080";
-export const token = localStorage.getItem('token');
 
 // Auth controller
 export const authenticate = (body: AuthenticateRequest) => 
@@ -118,7 +119,7 @@ export const createBook = (uploadBook: CreateBookRequest) => {
         headers: {
             Accept: 'application/json',
             ContentType: 'application/json; charset=utf8',
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${sessionStorage.getItem('token')}`
         },
         body: form
     });
@@ -132,11 +133,54 @@ export const getBooks = (page: number, size: number) =>
 export const getBook = (bookId: string) => 
     request<GetBookResponse>(`${host}/api/books/${bookId}`, header("GET", undefined, true, false));
 
-export const deleteBook = (bookId: string) => 
-    request<Empty>(`${host}/api/books/${bookId}`, header("DELETE", undefined, true));
+export const getImageBlob = async (bookId: string) => {
 
-export const updateBook = (bookId: string, header: RequestInit) => 
-    request<UpdateBookResponse>(`${host}/api/books/${bookId}`, header);
+    var response = request<GetBookResponse>(`${host}/api/books/${bookId}`, {
+        method: "GET",
+        headers: {
+            Accept: 'application/json',
+            ContentType: 'application/json; charset=utf8',
+            Authorization: `Bearer ${sessionStorage.getItem('token')}`
+        }
+    });
+
+    var result = await response;
+    
+    return await requestBlob(result!.coverImageUrl, {method: "GET"});
+}
+
+export const deleteBook = (bookId: string) => 
+    request<DeleteBookResponse>(`${host}/api/books/${bookId}`, header("DELETE", undefined, true));
+
+export const updateBook = (bookId: string, updateBook: UpdateBookRequest) => {
+
+    const form = new FormData();
+
+    form.append('id', updateBook.id);
+    form.append('title', updateBook.title);
+    form.append('description', updateBook.description);
+    form.append('edition', (updateBook.edition !== undefined ? updateBook.edition : 1).toString());
+    form.append('year', updateBook.year.toString());
+    form.append('totalPages', updateBook.totalPages.toString());
+    form.append('authorId', updateBook.authorId);
+    updateBook.categories.map(category => {
+        form.append('categories', category);
+    });
+    form.append('coverImage', updateBook.coverImage!);
+    form.append('bookFile', updateBook.bookFile!);
+
+    var response = request<UpdateBookResponse>(`${host}/api/books/${bookId}`, {
+        method: "PUT",
+        headers: {
+            Accept: 'application/json',
+            ContentType: 'application/json; charset=utf8',
+            Authorization: `Bearer ${sessionStorage.getItem('token')}`
+        },
+        body: form
+    });
+
+    return response;
+}
 
 export const getCurrentBooks = (page: number, size: number) => 
     request<GetBooksResponse>(`${host}/api/books/current?page=${page}&size=${size}`, header("GET", undefined, true, false));
@@ -195,6 +239,22 @@ export const deleteComment = (bookId: string, commentId: string) =>
 export const getFile = (bookId: string) =>
     request<FileInfo>(`${host}/api/books/${bookId}/file`, header("GET", undefined, true, false));
 
+export const getFileBlob = async (bookId: string) => {
+
+    var response = request<FileInfo>(`${host}/api/books/${bookId}/file`, {
+        method: "GET",
+        headers: {
+            Accept: 'application/json',
+            ContentType: 'application/json; charset=utf8',
+            Authorization: `Bearer ${sessionStorage.getItem('token')}`
+        }
+    });
+
+    var result = await response;
+
+    return await requestBlob(result!.tempUrl, {method: "GET"});
+}
+
 export const isCurrentBook = (bookId: string) =>
     request<UserBookResponse>(`${host}/api/books/current/${bookId}/is-current`, header("GET", undefined, true, false));
 
@@ -248,7 +308,7 @@ export const addAvatar = (userId: string, file: File) => {
         headers: {
             Accept: 'application/json',
             ContentType: 'application/json; charset=utf8',
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${sessionStorage.getItem('token')}`
         },
         body: form
     });
@@ -295,7 +355,7 @@ const header = (method: string, requestBody: string = "", isAuth: boolean = fals
             method: method,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
             },
             body: requestBody
         }
@@ -306,7 +366,7 @@ const header = (method: string, requestBody: string = "", isAuth: boolean = fals
             method: method,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
             }
         }
     }

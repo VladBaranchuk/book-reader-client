@@ -8,6 +8,7 @@ import { AddRatingRequest } from "../../../types";
 interface IAddRating {
     bookId: string,
     onClose: React.MouseEventHandler<HTMLButtonElement>
+    setRatingNumber: (value: {rating: number, numberOfVoters: number}) => void
 }
 
 enum Success{
@@ -16,7 +17,7 @@ enum Success{
     Success
 }
 
-const AddRating: FC<IAddRating> = ({bookId, onClose}) => {
+const AddRating: FC<IAddRating> = ({bookId, onClose, setRatingNumber}) => {
   
     const [success, setSuccess] = useState<Success>(Success.None)
     const [rating, setRating] = useState<AddRatingRequest>({
@@ -27,7 +28,10 @@ const AddRating: FC<IAddRating> = ({bookId, onClose}) => {
         setRating({value: value!});
         setSuccess(Success.Load)
         addRating(bookId, {value: value!})
-        .then(result => setSuccess(Success.Success))
+        .then(result => {
+            setSuccess(Success.Success)
+            setRatingNumber({rating: result!.rating, numberOfVoters: result!.numberOfVoters})
+        })
     }
 
   return (
@@ -55,7 +59,7 @@ const AddRating: FC<IAddRating> = ({bookId, onClose}) => {
                 borderRadius: '8px'
             }}>
                 <Box sx={{width: '100%', display: 'flex', justifyContent: 'end'}}>
-                    <Button sx={{ color: 'gray', minWidth: '32px'}}><CloseIcon/></Button>
+                    <Button sx={{ color: 'gray', minWidth: '32px'}} onClick={onClose}><CloseIcon/></Button>
                 </Box>
                     <Rating
                         value={rating.value}

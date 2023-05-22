@@ -1,21 +1,27 @@
-import { Avatar, Box, Button, ButtonGroup, Card, CardActions, CardMedia, Checkbox, ClickAwayListener, Grow, ListItemText, MenuItem, MenuList, Paper, Popper, Rating, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, ButtonGroup, Card, CardActions, CardMedia, Checkbox, ClickAwayListener, Fab, Grow, ListItemText, MenuItem, MenuList, Paper, Popper, Rating, TextField, Typography } from '@mui/material';
 import { FC, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import SendIcon from '@mui/icons-material/Send';
 import { addToCurrentBooks, addToFavoriteBooks, addToReadedBooks, addToScheduledBooks, createComment, deleteBook, getAuthorBooks, getBook, getUser, isCurrentBook, isFavoriteBook, isReadedBook, isScheduledBook, removeFromCurrentBooks, removeFromFavoriteBooks, removeFromReadedBooks, removeFromScheduledBooks } from '../../../http-requests'
-import { CreateCommentRequest, GetBookResponse, GetBooksResponse, GetUserResponse } from '../../../types';
+import { CreateCommentRequest, GetBookResponse, GetBooksResponse, GetUserResponse, Comment } from '../../../types';
 import AddRating from '../../modal/addRating/add-rating';  
 import CommentBar from '../../commentBar/commentBar';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import BookItem from '../../bookItem/bookItem';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const Book: FC = () => {
 
     const {id} = useParams();
     const navigate = useNavigate();
-    const userId = localStorage.getItem('userId');
-    const role = localStorage.getItem('role');
+    const userId = sessionStorage.getItem('userId');
+    const role = sessionStorage.getItem('role');
     const [authorBooks, setAuthorBooks] = useState<GetBooksResponse>();
+    const [rating, setRating] = useState({
+        rating: 0,
+        numberOfVoters: 0
+    });
+    const [comments, setComments] = useState<Comment[]>();
     const [user, setUser] = useState<GetUserResponse>({
         id: "",
         userName: "",
@@ -57,11 +63,15 @@ const Book: FC = () => {
 
     const [open, setOpen] = useState(false);
     const anchorRef = useRef<HTMLDivElement>(null);
-    const [selectedIndex, setSelectedIndex] = useState(0);
     
     useEffect(() => {
         getBook(id!)
-        .then(x => setBook(x!))
+            .then(x => {
+                if (x == undefined) navigate('/catalog/1')
+                setBook(x!)
+                setRating({rating: x!.rating, numberOfVoters: x!.numberOfVoters})
+                setComments(x!.comments)
+            })
 
         if(userId !== null){
             getUser(userId!)
@@ -86,41 +96,25 @@ const Book: FC = () => {
         .then(x => setAuthorBooks(x!))
     }, [book])
 
-    useEffect(() => {
-        if(isCurrent) {
-            addToCurrentBooks({bookId: id!})
-        }
-        else{
-            removeFromCurrentBooks(id!)
-        }
-    }, [isCurrent])
+    const currentBookHander = (value: boolean) => {
+        value ? addToCurrentBooks({bookId: id!}) : removeFromCurrentBooks(id!)
+        setIsCurrent(value)
+    }
 
-    useEffect(() => {
-        if(isFavorite) {
-            addToFavoriteBooks({bookId: id!})
-        }
-        else{
-            removeFromFavoriteBooks(id!)
-        }
-    }, [isFavorite])
+    const favoriteBookHandler = (value: boolean) => {
+        value ? addToFavoriteBooks({bookId: id!}) : removeFromFavoriteBooks(id!)
+        setIsFavorite(value)
+    }
 
-    useEffect(() => {
-        if(isReaded) {
-            addToReadedBooks({bookId: id!})
-        }
-        else{
-            removeFromReadedBooks(id!)
-        }
-    }, [isReaded])
+    const readedBookHandler = (value: boolean) => {
+        value ? addToReadedBooks({bookId: id!}) : removeFromReadedBooks(id!)
+        setIsReaded(value)
+    }
 
-    useEffect(() => {
-        if(isScheduled) {
-            addToScheduledBooks({bookId: id!})
-        }
-        else{
-            removeFromScheduledBooks(id!)
-        }
-    }, [isScheduled])
+    const scheduledBookHandler = (value: boolean) => {
+        value ? addToScheduledBooks({bookId: id!}) : removeFromScheduledBooks(id!)
+        setIsScheduled(value)
+    }
 
     const addRatingHandler = () => {
         setAddRatingOpen(!addRatingOpen)
@@ -137,13 +131,15 @@ const Book: FC = () => {
 
     const addCommentHandler = () => {
         createComment(id!, newComment)
-        .then(x => setBook(x!))
+        .then(x => {
+            setComments(x!.comments)
+            setNewComment({
+                bookId: id!,
+                text: ""
+            })
+        })
+
     }
-    
-    const handleMenuItemClick = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, index: number) => {
-        setSelectedIndex(index);
-        setOpen(false);
-    };
     
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
@@ -159,28 +155,31 @@ const Book: FC = () => {
 
     return (
         <>
-        {addRatingOpen && <AddRating bookId={id!} onClose={addRatingHandler}/>}
+        {addRatingOpen && <AddRating bookId={id!} onClose={addRatingHandler} setRatingNumber={setRating}/>}
         <div style={{display: 'flex', width: '72vw', alignItems: 'start', flexDirection: "column", margin: '20px auto', flexWrap: 'wrap'}}>
             <div style={{display: 'flex', width: '72vw', alignItems: 'start', flexDirection: "row", margin: '20px auto', flexWrap: 'wrap'}}>
                 <Card sx={{ width: '23vw', m:2, boxShadow: 'none' }}>
-                    <CardMedia
-                    component="img"
-                    image={book.coverImageUrl}
-                    alt="Paella dish"
-                    />
+                    <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'end'}}>
+                        <CardMedia
+                        component="img"
+                        image={book.coverImageUrl}
+                        alt="Paella dish"
+                        />
+                        <Fab color="primary" component="label" size='small' sx={{mr: 1, mt: -6, background: 'white'}} onClick={() => favoriteBookHandler(!isFavorite)}>
+                            {isFavorite ? <FavoriteIcon sx={{color: 'red'}} /> : <FavoriteIcon sx={{color: 'gray'}} />}
+                        </Fab>
+                    </Box>
                     { (userId !== undefined) &&
-                        <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                        <Box sx={{display: 'flex', flexDirection: 'column', mt: 1}}>
                             <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center', m: 1, ml: 0, justifyContent: 'space-between'}}>
                                 {
-                                    (role === "User") &&
-                                    <Button variant="contained" onClick={addRatingHandler} sx={{mr: 1, background: '#fe4e1c', '&:hover': { background: '#db4216' }}} size='small'>Оценить</Button>
+                                    role && <Button variant="contained" onClick={addRatingHandler} sx={{mr: 1, background: '#fe4e1c', '&:hover': { background: '#db4216' }}} size='small'>Оценить</Button>
                                 }
                                 <Link to={`/books/${id}/reader`}>
                                     <Button variant="contained" size='small' sx={{mr:1}}>Читать</Button>
                                 </Link>
                                 {
-                                    (role === "User") &&
-                                    <Box>
+                                    role && <Box>
                                         <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
                                             <Button onClick={handleToggle} size='small'>Добавить</Button>
                                             <Button
@@ -216,15 +215,15 @@ const Book: FC = () => {
                                                 <ClickAwayListener onClickAway={handleClose}>
                                                     <MenuList id="split-button-menu" autoFocusItem>
                                                         <MenuItem>
-                                                            <Checkbox checked={isCurrent} onChange={(event) => setIsCurrent(event.target.checked)}/>
+                                                            <Checkbox checked={isCurrent} onChange={(event) => currentBookHander(event.target.checked)}/>
                                                             <ListItemText primary="Текущие" />
                                                         </MenuItem>
                                                         <MenuItem>
-                                                            <Checkbox checked={isReaded} onChange={(event) => setIsReaded(event.target.checked)}/>
+                                                            <Checkbox checked={isReaded} onChange={(event) => readedBookHandler(event.target.checked)}/>
                                                             <ListItemText primary="Прочитанные" />
                                                         </MenuItem>
                                                         <MenuItem>
-                                                            <Checkbox checked={isScheduled} onChange={(event) => setIsScheduled(event.target.checked)}/>
+                                                            <Checkbox checked={isScheduled} onChange={(event) => scheduledBookHandler(event.target.checked)}/>
                                                             <ListItemText primary="Сохраненные" />
                                                         </MenuItem>
                                                     </MenuList>
@@ -234,12 +233,6 @@ const Book: FC = () => {
                                             )}
                                         </Popper>
                                     </Box>
-                                }
-                            </Box>
-                            <Box>
-                                {
-                                    (role === "Administrator") && 
-                                    <Button variant="contained" sx={{width: '36px'}}>Edit</Button>
                                 }
                             </Box>
                             <Box sx={{display: 'flex', flexDirection: 'row', mt: 2}}>
@@ -271,13 +264,13 @@ const Book: FC = () => {
                             </Box>
                             <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'start'}}>
                                 <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                                    <Rating name="read-only" value={book?.rating} readOnly precision={0.1} sx={{mr:1}} />
+                                    <Rating name="read-only" value={rating.rating} readOnly precision={0.1} sx={{mr:1}} />
                                     <Typography color="text.secondary" sx={{mr:1}}>
-                                    <b>{book?.rating.toFixed(1)}</b>
+                                    <b>{rating.rating.toFixed(1)}</b>
                                     </Typography>
                                 </Box>
                                 <Typography color="text.secondary">
-                                    ({book?.numberOfVoters})
+                                    ({rating.numberOfVoters})
                                 </Typography>
                             </Box>
                             <Box sx={{mt: 2}}>
@@ -293,8 +286,8 @@ const Book: FC = () => {
                 </Card>
                 <Box sx={{display: 'flex', flexDirection: 'row', mt: 3}}>
                     <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'end', justifyContent: 'start'}}>
-                        {
-                            (role === "User") && <>
+                        { 
+                            role && <>
                                 <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
                                     <Avatar src={user.avatarUrl} sx={{mr:1}} />
                                     <TextField
@@ -316,8 +309,7 @@ const Book: FC = () => {
                                 </Box>
                             </>
                         }
-                        
-                        <CommentBar catalog={book.comments}/>
+                        <CommentBar catalog={comments}/>
                     </Box>
                     <Box sx={{width: '300px', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: '-16px'}}>
                         {authorBooks?.books.map((item, index) => <BookItem key={index} item={item} />)}

@@ -18,6 +18,7 @@ export type BookContents = Array<{
 export type EpubReaderState = {
   bookId: string,
   ebookUrl: string,
+  fontSize: string,
   book: Book,
   catalogue: NavItem[] | null,
   rendition: React.MutableRefObject<Rendition | null>,
@@ -29,7 +30,6 @@ export type EpubReaderState = {
   currentChapter: string,
   isSearchDrawer: boolean,
   bookContents: BookContents,
-  initialFontSize: string,
   bookmarks: Bookmarks,
   notes: Note[],
   currentCfi: string,
@@ -40,6 +40,7 @@ export type EpubReaderState = {
   isPanelBar: boolean,
   setIsPanelBar: (flag: boolean) => void,
   setEbookUrl: (url: string) => void,
+  setFontSize: (value: string) => void,
   toggleSearchDrawer: () => void,
   toggleCatalogue: () => void,
   setCurretChapter: (href: string) => void,
@@ -57,7 +58,7 @@ export interface ILocationChangeProps {
   end: string, href: string, index: number, percentage: number, start: string
 }
 
-function useEpubReader({ bookId, url, fontSize, epubOptions }: IReaderProps): EpubReaderState {
+function useEpubReader({ bookId, url, epubOptions }: IReaderProps): EpubReaderState {
   if (!url) return null
 
   const [ebookUrl, setEbookUrl] = useState(url)
@@ -75,13 +76,13 @@ function useEpubReader({ bookId, url, fontSize, epubOptions }: IReaderProps): Ep
   const [currentChapter, setCurretChapter] = useState('')
   const [currentCfi, setCurrentCfi] = useState('')
   const { isSnackbar, snackbarMessage, showToast } = useSnackbar()
+  const [fontSize, setFontSize] = useState('100%')
 
   const toggleCatalogue = () => {
     setIsCatalogue(!isCatalogue)
   }
 
   const book = Epub(ebookUrl, epubOptions);
-  const initialFontSize = fontSize ? fontSize : '100%'
 
   const { bookContents, searchBookContents } = useBookContent(book)
   const { bookmarks, addBookmark, removeBookmark } = useBookmarks()
@@ -100,7 +101,7 @@ function useEpubReader({ bookId, url, fontSize, epubOptions }: IReaderProps): Ep
     setCatalogue(toc)
     rendition.current = epubRendition
 
-    epubRendition.themes.fontSize(initialFontSize);
+    epubRendition.themes.fontSize(fontSize);
     epubRendition.display(currentCfi);
 
     epubRendition.on('locationChanged', ({ percentage, href }: ILocationChangeProps) => {
@@ -123,6 +124,7 @@ function useEpubReader({ bookId, url, fontSize, epubOptions }: IReaderProps): Ep
   return {
     bookId,
     ebookUrl,
+    fontSize,
     book,
     catalogue,
     isCatalogue,
@@ -134,7 +136,6 @@ function useEpubReader({ bookId, url, fontSize, epubOptions }: IReaderProps): Ep
     currentChapter,
     isSearchDrawer,
     bookContents,
-    initialFontSize,
     bookmarks,
     notes,
     currentCfi,
@@ -145,6 +146,7 @@ function useEpubReader({ bookId, url, fontSize, epubOptions }: IReaderProps): Ep
     isPanelBar,
     setIsPanelBar,
     setEbookUrl,
+    setFontSize,
     toggleSearchDrawer,
     toggleCatalogue,
     setCurretChapter,

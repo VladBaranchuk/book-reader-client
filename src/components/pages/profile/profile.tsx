@@ -7,7 +7,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 const Profile: FC = () => {
 
-    const userId = localStorage.getItem('userId');
+    const userId = sessionStorage.getItem('userId');
     const [user, setUser] = useState<GetUserResponse>();
     const [books, setBooks] = useState<GetBooksResponse>();
     const [updateButtonDisabled, setUpdateButtonDisabled] = useState(true);

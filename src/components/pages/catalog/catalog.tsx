@@ -3,13 +3,13 @@ import React, { FC, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { getBooks } from '../../../http-requests'
 import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined';
-import { GetBooksResponse } from '../../../types';
+import { Book } from '../../../types';
 import Catalog from '../../catalog/catalog';
 import Filter from '../../modal/addRating/filter';
 
 const BookCatalog: FC = () => {
 
-    const [books, setBooks] = useState<GetBooksResponse>();
+    const [books, setBooks] = useState<Book[]>();
     const [openFilter, setOpenFilter] = useState<boolean>(false);
     const {id} = useParams();
     const navigate = useNavigate();
@@ -17,12 +17,13 @@ const BookCatalog: FC = () => {
         navigate(`/catalog/${value}`);
 
         getBooks(value, 12)
-        .then(x => setBooks(x))
+            .then(x => setBooks(x?.books))
     };
 
     useEffect(() => {
+        setBooks([])
         getBooks(Number(id), 12)
-        .then(x => setBooks(x))
+            .then(x => setBooks(x?.books))
     }, [id]) 
 
     const openFilterhandler = () => {
@@ -44,7 +45,7 @@ const BookCatalog: FC = () => {
                     <TuneOutlinedIcon sx={{color: 'gray'}}/>
                 </Button>
             </Box>
-            <Catalog catalog={books?.books}/>
+            <Catalog catalog={books}/>
             <Box sx={{width: '70vw', margin: '20px auto 100px auto', display: 'flex', justifyContent: 'center'}}>
                 <Pagination count={10} page={Number(id)} onChange={handleChange}/>
             </Box>

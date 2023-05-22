@@ -2,23 +2,24 @@ import { Box, Button } from '@mui/material'
 import { FC, useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { MyContext } from '../layout';
+import { Session } from 'inspector';
 
 const menu = [
     {name: 'Каталог', path: '/catalog/1', isAuth: false, role: "Guest"}
-   ];
+];
 
 const Header: FC = () => {
 
     const navigate = useNavigate();
 
-    const token = localStorage.getItem('token');
-    const role = localStorage.getItem('role');
+    const token = sessionStorage.getItem('token');
+    const role = sessionStorage.getItem('role');
 
     const exitHandler = () => {
-        localStorage.removeItem('token')
-        localStorage.removeItem('userId')
-        localStorage.removeItem('role')
-        navigate('/')
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('userId');
+        sessionStorage.removeItem('role');
+        navigate('/');
     }
 
     var context = useContext(MyContext);
@@ -32,19 +33,11 @@ const Header: FC = () => {
             </div>
             <div style={{width: '50%', height: 'inherit'}}>
                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex', justifyContent: 'center', height: 'inherit' } }}>
-                {
-                    menu.map((page, index) => {
-                        if((!page.isAuth || token)){
-                            return (<Link key={index} to={page.path}>
-                                <Button
-                                sx={{ my: 2, color: 'white', display: 'block', margin: '8px' }}
-                                >
-                                    {page.name}
-                                </Button>
-                            </Link>)
-                        }
-                    })
-                }
+                <Link to='/catalog/1'>
+                    <Button sx={{ my: 2, color: 'white', display: 'block', margin: '8px' }}>
+                        Каталог
+                    </Button>
+                </Link>
 
                 {(role === "User") && 
                     <Link to="/favorite-books/1">
@@ -100,25 +93,25 @@ const Header: FC = () => {
             <div style={{width: '25%', height: 'inherit', display: 'flex', justifyContent: 'center'}}>
                 {
                     token ? 
-                    <Box sx={{display: 'flex', flexDirection: 'row', height: 'inherit'}}>
-                        {
-                            (role === "User") && <Link to='/profile'>
-                                                    <Button sx={{ my: 2, color: 'white', display: 'block', margin: '8px' }}>
-                                                        Профиль
-                                                    </Button>
-                                                </Link>
-                        }
-                        
-                        <Button sx={{ my: 2, color: 'white', display: 'block', margin: '8px' }} onClick={exitHandler}>
-                            Выйти
-                        </Button>
-                    </Box>
-                     :
-                    <Link to='/signin'>
-                        <Button sx={{ my: 2, color: 'white', display: 'block', margin: '8px' }}>
-                            Войти
-                        </Button>
-                    </Link>
+                        <Box sx={{display: 'flex', flexDirection: 'row', height: 'inherit'}}>
+                            {
+                                (role === "User") && 
+                                    <Link to='/profile'>
+                                        <Button sx={{ my: 2, color: 'white', display: 'block', margin: '8px' }}>
+                                            Профиль
+                                        </Button>
+                                    </Link>
+                            }
+                            <Button sx={{ my: 2, color: 'white', display: 'block', margin: '8px' }} onClick={exitHandler}>
+                                Выйти
+                            </Button>
+                        </Box>
+                            :
+                        <Link to='/signin'>
+                            <Button sx={{ my: 2, color: 'white', display: 'block', margin: '8px' }}>
+                                Войти
+                            </Button>
+                        </Link>
                 }
                 
             </div>

@@ -9,7 +9,6 @@ import { MyContext } from "../layout/layout"
 export interface IReaderProps {
   bookId: string,
   url: string,
-  fontSize?: string,
   epubOptions?: Object
 }
 
@@ -26,7 +25,6 @@ function Reader(props: IReaderProps) {
       <Catalogue></Catalogue>
       <ContentView></ContentView>
     </readerContext.Provider>
-
   )
 }
 

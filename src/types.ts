@@ -154,14 +154,35 @@ export type GetBookResponse = {
     comments: Comment[]
 }
 
-export type UpdateBookRequest = {
+export type DeleteBookResponse = {
+    id: string,
     title: string,
     description: string,
     edition?: string,
-    ageRestriction?: number,
-    authorId: number,
-    image: Blob,
-    fileInPdf: Blob
+    year: number,
+    totalPages: number,
+    isPublic: boolean,
+    coverImageUrl: string,
+    authorName: string,
+    rating: number,
+    numberOfVoters: number,
+    fileId: string,
+    authorId: string
+    categories: Category[]
+    comments: Comment[]
+}
+
+export type UpdateBookRequest = {
+    id: string,
+    title: string,
+    description: string,
+    edition?: number,
+    year: number,
+    totalPages: number,
+    authorId: string,
+    categories: string[],
+    coverImage: Blob,
+    bookFile: Blob
 }
 
 export type UpdateBookResponse = {

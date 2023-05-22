@@ -2,11 +2,11 @@ import { Autocomplete, Box, Button, ButtonPropsColorOverrides, Checkbox, Circula
 import CloseIcon from '@mui/icons-material/Close';
 import React, { FC, ReactNode, SyntheticEvent, useEffect, useState } from "react";
 import { getAuthors, getCategories, searchBooks } from "../../../http-requests";
-import { AddRatingRequest, Author, Category, GetBooksResponse, SearchBooksRequest } from "../../../types";
+import { AddRatingRequest, Author, Book, Category, GetBooksResponse, SearchBooksRequest } from "../../../types";
 
 interface IAddRating {
-    setBooks: React.Dispatch<React.SetStateAction<GetBooksResponse | undefined>>
-    onClose: React.MouseEventHandler<HTMLButtonElement>
+    setBooks: React.Dispatch<React.SetStateAction<Book[] | undefined>>
+    onClose: () => void
 }
 
 const Filter: FC<IAddRating> = ({setBooks, onClose}) => {
@@ -74,9 +74,10 @@ const Filter: FC<IAddRating> = ({setBooks, onClose}) => {
     }
 
     const searchHandler = () => {
-        setBooks(undefined);
+        setBooks([]);
         searchBooks(1, 12, filter)
-        .then(x => setBooks(x))
+            .then(x => setBooks(x?.books))
+        onClose()
     }
 
     const categoryProps = {

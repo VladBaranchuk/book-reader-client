@@ -12,8 +12,6 @@ const CommentItem: FC<IItem> = ({item}) => {
 
   var date = new Date(comment.createdAtUtc);
 
-  
-
   return (
     <Card sx={{ width: 590, m:1, boxShadow: 'none', background: '#f0f0f0' }}>
       <CardContent sx={{'&:last-child': { pb: 2 }}}>

@@ -28,15 +28,15 @@ const SignIn: React.FC = () => {
 
         authenticate(signIn)
         .then(result => {
-            localStorage.setItem('token', result!.accessToken);
+            sessionStorage.setItem('token', result!.accessToken);
 
             getCurrentUserWithToken(result!.accessToken)
             .then(result => {
                 if(result !== undefined){
-                    localStorage.setItem('userId', result.id);
-                    localStorage.setItem('role', result.role);
+                    sessionStorage.setItem('userId', result.id);
+                    sessionStorage.setItem('role', result.role);
 
-                    navigate('/');
+                    navigate('/catalog/1');
                 }
             })
         })
