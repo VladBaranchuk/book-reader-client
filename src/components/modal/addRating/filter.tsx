@@ -119,29 +119,6 @@ return (
                 <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                     <TextField sx={{width: '400px', mb: 3}} value={filter.searchString} onChange={handleSearch} id="outlined-basic" label="Поиск" variant="outlined" size='small' />
                     <Box sx={{display: 'flex', alignItems: 'end', mb: 3}}>
-                        <Box sx={{mr:1}}>
-                            <FormGroup sx={{width: '400px', mb: 1}}>
-                                <FormControlLabel control={<Checkbox />} value={filter.isPopular} onChange={handleIsPopular} label="Популярные" />
-                                <FormControlLabel control={<Checkbox />} value={filter.isNewer} onChange={handleIsNewer} label="Новые" />
-                                <FormControlLabel control={<Checkbox />} value={filter.isBetter} onChange={handleIsBetter} label="Лучшие" />
-                            </FormGroup>
-                            <FormControl sx={{width: '400px'}}>
-                                <InputLabel id="demo-simple-select-label" size='small'>Время</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    label="время"
-                                    size='small'
-                                    onChange={handleEstimateDate}
-                                    value={filter.estimateDate}
-                                >
-                                    <MenuItem value={1}>За неделю</MenuItem>
-                                    <MenuItem value={2}>За месяц</MenuItem>
-                                    <MenuItem value={3}>За год</MenuItem>
-                                    <MenuItem value={4}>За все время</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Box>
                         <Box>
                             <Box sx={{width: '400px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', mb: 3}}>
                                 <Box>

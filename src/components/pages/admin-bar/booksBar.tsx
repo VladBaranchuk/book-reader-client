@@ -25,6 +25,12 @@ const BooksBar: FC = () => {
         label: ""
     });
     const [defaultCategories, setDefaultCategories] = useState<Array<{id: string, label: string}> | undefined>([]);
+    const [defaultAuthor2, setDefaultAuthor2] = useState<{id: string, label: string} | undefined>({
+        id: "",
+        label: ""
+    });
+    const [defaultCategories2, setDefaultCategories2] = useState<Array<{id: string, label: string}> | undefined>([]);
+    
     const [defaultImage, setDefaultImage] = useState<string>('');
     const [success, setSuccess] = useState<Success>(Success.None);
     const [image, setImage] = useState<ImageType[]>([]);
@@ -144,6 +150,7 @@ const BooksBar: FC = () => {
 
     const handleAuthor = (event: SyntheticEvent<Element, Event>, value: { id: string; label: string; } | null) => {
         value === null ? setNewBook(prev => ({...prev, authorId: ""})) : setNewBook(prev => ({...prev, authorId: value.id}))
+        setDefaultAuthor2(authorProps.options.find(author => author.id === value?.id))
     }
     const handleEditAuthor = (event: SyntheticEvent<Element, Event>, value: { id: string; label: string; } | null) => {
         value === null ? setEditItem(prev => ({...prev, authorId: ""})) : setEditItem(prev => ({...prev, authorId: value.id}))
@@ -152,9 +159,11 @@ const BooksBar: FC = () => {
 
     const handleCategories = (event: SyntheticEvent<Element, Event>, value: { id: string; label: string; }[] | null) => {
         value === null ? setNewBook(prev => ({...prev, categories: []})) : setNewBook(prev => ({...prev, categories: value.map(item => item.id)}))
+        setDefaultCategories2(categoryProps.options.filter(category => value?.find(x => x.id === category.id)))
     }
     const handleEditCategories = (event: SyntheticEvent<Element, Event>, value: { id: string; label: string; }[] | null) => {
         value === null ? setEditItem(prev => ({...prev, categories: []})) : setEditItem(prev => ({...prev, categories: value.map(item => item.id)}))
+        setDefaultCategories(categoryProps.options.filter(category => value?.find(x => x.id === category.id)))
     }
 
     const uploadImageHandler = (imageList: ImageListType, addUpdateIndex: number[] | undefined) => {
@@ -200,6 +209,28 @@ const BooksBar: FC = () => {
                 coverImage: new Blob(),
                 bookFile: new Blob()
             });
+            setEditItem({
+                id: "",
+                title: "",
+                description: "",
+                edition: 0,
+                year: 0,
+                totalPages: 0,
+                authorId: "",
+                categories: [],
+                coverImage: new Blob(),
+                bookFile: new Blob()
+            });
+            setDefaultAuthor({
+                id: "",
+                label: ""
+            });
+            setDefaultCategories([]);
+            setDefaultAuthor2({
+                id: "",
+                label: ""
+            });
+            setDefaultCategories2([]);
             setSuccess(Success.None);
         }, 1000);
     }
@@ -207,26 +238,30 @@ const BooksBar: FC = () => {
     const updateBookHandler = () => {
         updateBook(editItem.id, editItem)
         .then(item => {
-            setSuccess(Success.Success);
-            handleClearButton();
+            if(item){
+                setSuccess(Success.Success);
+                handleClearButton();
 
-            const newBooks = books.filter(o => o.id !== item?.id);
+                const newBooks = books.filter(o => o.id !== item?.id);
 
-            setBooks([]);
-            setBooks([...newBooks, item as Book]);
+                setBooks([]);
+                setBooks([...newBooks, item as Book]);
+            }
         })
     }
 
     const createBookHandler = () => {
         createBook(newBook)
         .then(item => {
-            setSuccess(Success.Success);
-            handleClearButton();
-
-            books.unshift(item as Book)
-
-            setBooks([]);
-            setBooks(books);
+            if(item){
+                setSuccess(Success.Success);
+                handleClearButton();
+    
+                books.unshift(item as Book)
+    
+                setBooks([]);
+                setBooks(books);
+            }
         })
     }
 
@@ -307,6 +342,7 @@ const BooksBar: FC = () => {
                                     <Autocomplete
                                         {...authorProps}
                                         disablePortal
+                                        value={defaultAuthor2}
                                         id="combo-box-demo"
                                         sx={{mt: 1.5}}
                                         onChange={handleAuthor}
@@ -315,6 +351,7 @@ const BooksBar: FC = () => {
                                     <Autocomplete
                                         {...categoryProps}
                                         disableClearable
+                                        value={defaultCategories2}
                                         disablePortal
                                         multiple
                                         id="tags-standard"
@@ -373,7 +410,7 @@ const BooksBar: FC = () => {
                                     </ImageUploading>
                                     <Button sx={{mt: 1.5, width: '255px'}} variant="outlined" color="success" component="label">
                                         {newBook.bookFile.size !== 0 ? <CheckIcon sx={{color: "green"}}/> : "Загрузить файл"}
-                                        <input hidden type="file" accept="application/epub+zip" onChange={uploadFileHandler} />
+                                        <input hidden type="file" accept=".epub" onChange={uploadFileHandler} />
                                     </Button>
                                 </Box>
                             </Box>
@@ -505,7 +542,7 @@ const BooksBar: FC = () => {
                                     </ImageUploading>
                                     <Button sx={{mt: 1.5, width: '255px'}} variant="outlined" color="success" component="label">
                                         {editItem.bookFile.size != 0 ? <CheckIcon sx={{color: "green"}}/> : "Загрузить файл"}
-                                        <input hidden type="file" accept="application/epub+zip" onChange={uploadEditFileHandler} />
+                                        <input hidden type="file" accept=".epub" onChange={uploadEditFileHandler} />
                                     </Button>
                                 </Box>
                             </Box>

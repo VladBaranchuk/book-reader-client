@@ -6,6 +6,7 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import PublicIcon from '@mui/icons-material/Public';
 import PublicOffIcon from '@mui/icons-material/PublicOff';
 import { publish, recall } from '../../../../http-requests';
+import Notify from '../../../modal/addRating/notify';
 
 interface IData{
     item: Book,
@@ -15,6 +16,7 @@ interface IData{
 
 const BooksDataGridItem: FC<IData> = ({item, edit, remove}) => {
     
+    const [notify, setNotify] = useState<boolean>(false);
     const [book, setBook] = useState<Book>(item!);
     const [isPulbic, setIsPublic] = useState<boolean>(item.isPublic);
 
@@ -23,7 +25,7 @@ const BooksDataGridItem: FC<IData> = ({item, edit, remove}) => {
     }
 
     const removeHandler = () => {
-        remove(book)
+        setNotify(true)
     }
 
     const isPublicHandler = () => {
@@ -38,6 +40,8 @@ const BooksDataGridItem: FC<IData> = ({item, edit, remove}) => {
     }
 
     return (
+        <>
+        {notify && <Notify onDelete={() => {remove(book); setNotify(false)}} onClose={setNotify} message={""}/>}
         <Card sx={{width: '98%', 
             minHeight: '40px', 
             mb: 1, 
@@ -87,6 +91,7 @@ const BooksDataGridItem: FC<IData> = ({item, edit, remove}) => {
                 </Box>
                 
         </Card>
+        </>
     )
 }
 

@@ -4,6 +4,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import { Author, CreateAuthorRequest } from '../../../types';
 import { createAuthor, getAuthors, searchAuthors, deleteAuthor, updateAuthor } from '../../../http-requests';
 import AuthorsDataGrid from './authorsDataGrid/authorsDataGrid';
+import Notify from '../../modal/addRating/notify';
 
 enum ToDo{
     None,
@@ -19,6 +20,7 @@ enum Success{
 
 const AuthorsBar: FC = () => {
 
+    const [notify, setNotify] = useState<boolean>(false);
     const [success, setSuccess] = useState<Success>(Success.None)
     const [search, setSearch] = useState<string>("");
     const [authors, setAuthors] = useState<Author[]>([]);
@@ -89,31 +91,35 @@ const AuthorsBar: FC = () => {
     const updateAuthorHandler = () => {
         updateAuthor(editItem.id, editItem)
         .then(item => {
-            setSuccess(Success.Success);
-            handleClearButton();
+            if(item){
+                setSuccess(Success.Success);
+                handleClearButton();
 
-            const newAuthors = authors.map(o => {
-                if (o.id === item?.id) {
-                    return item as Author;
-                }
-                return o;
-            });
+                const newAuthors = authors.map(o => {
+                    if (o.id === item?.id) {
+                        return item as Author;
+                    }
+                    return o;
+                });
 
-            setAuthors([]);
-            setAuthors(newAuthors);
+                setAuthors([]);
+                setAuthors(newAuthors);
+            }
         })
     }
 
     const createAuthorHandler = () => {
         createAuthor(newAuthor)
         .then(item => {
-            setSuccess(Success.Success);
-            handleClearButton();
+            if(item){
+                setSuccess(Success.Success);
+                handleClearButton();
 
-            authors.unshift(item as Author)
+                authors.unshift(item as Author)
 
-            setAuthors([]);
-            setAuthors(authors);
+                setAuthors([]);
+                setAuthors(authors);
+            }
         })
     }
 
@@ -128,6 +134,7 @@ const AuthorsBar: FC = () => {
     }
 
     return (
+        <>
         <Box sx={{width: '100%', height: '77vh', display: 'flex', flexDirection: 'row', justifyContent: 'space-around'}}>
             <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'start'}}>
                 <Box sx={{display: 'flex', flexDirection: 'row', width: '30vw', alignItems: 'center', justifyContent: 'center', margin: '30px auto'}}>
@@ -228,6 +235,7 @@ const AuthorsBar: FC = () => {
                 }
             </Box>
         </Box> 
+        </>
     )
 }
 

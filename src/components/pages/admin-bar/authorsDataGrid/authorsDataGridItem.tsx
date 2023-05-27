@@ -3,6 +3,7 @@ import { Author } from '../../../../types'
 import { Box, Button, Card, Typography } from '@mui/material'
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import Notify from '../../../modal/addRating/notify';
 
 interface IData{
     item: Author,
@@ -12,16 +13,19 @@ interface IData{
 
 const AuthorsDataGridItem: FC<IData> = ({item, edit, remove}) => {
     const [author, setAuthor] = useState<Author>(item!);
+    const [notify, setNotify] = useState<boolean>(false);
 
     const editHandler = () => {
         edit(author)
     }
 
     const removeHandler = () => {
-        remove(author)
+        setNotify(true)
     }
 
     return (
+        <>
+        {notify && <Notify onDelete={() => {remove(author); setNotify(false)}} onClose={setNotify} message={"Автор будет удален вместе со всеми его книгами"}/>}
         <Card sx={{width: '98%', 
             minHeight: '40px', 
             mb: 1, 
@@ -51,6 +55,7 @@ const AuthorsDataGridItem: FC<IData> = ({item, edit, remove}) => {
                     </Button>
                 </Box>
         </Card>
+        </>
     )
 }
 

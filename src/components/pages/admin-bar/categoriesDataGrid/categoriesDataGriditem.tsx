@@ -3,6 +3,7 @@ import { Category } from '../../../../types'
 import { Box, Button, Card, SxProps, Theme, Typography } from '@mui/material'
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import Notify from '../../../modal/addRating/notify';
 
 interface IData{
     item: Category,
@@ -13,15 +14,18 @@ interface IData{
 const CategoriesDataGridItem: FC<IData> = ({item, edit, remove}) => {
     const [category, setCategory] = useState<Category>(item!);
 
+    const [notify, setNotify] = useState<boolean>(false);
     const editHandler = () => {
         edit(category)
     }
 
     const removeHandler = () => {
-        remove(category)
+        setNotify(true)
     }
 
     return (
+        <>
+        {notify && <Notify onDelete={() => {remove(category); setNotify(false)}} onClose={setNotify} message={"Будут удалены категории в книгах"}/>}
         <Card sx={{width: '98%', 
             minHeight: '40px', 
             mb: 1, 
@@ -51,6 +55,7 @@ const CategoriesDataGridItem: FC<IData> = ({item, edit, remove}) => {
                     </Button>
                 </Box>
         </Card>
+        </>
     )
 }
 

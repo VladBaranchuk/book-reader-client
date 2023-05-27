@@ -123,12 +123,6 @@ const Profile: FC = () => {
                     </Box>
                 </Box>
             </Box>
-            <Box>
-                <Typography variant="h5" color="text.secondary" sx={{width: '70vw', margin: '20px auto'}}>
-                    <b>Любимые книги</b>
-                </Typography>
-                <Catalog catalog={books?.books}/>
-            </Box>
         </>  
     )
 }

@@ -78,31 +78,35 @@ const CategoriesBar: FC = () => {
     const updateCategoryHandler = () => {
         updateCategory(editItem.id, editItem)
         .then(item => {
-            setSuccess(Success.Success);
-            handleClearButton();
+            if(item){
+                setSuccess(Success.Success);
+                handleClearButton();
 
-            const newCategories = categories.map(o => {
-                if (o.id === item?.id) {
-                    return item as Category;
-                }
-                return o;
-            });
+                const newCategories = categories.map(o => {
+                    if (o.id === item?.id) {
+                        return item as Category;
+                    }
+                    return o;
+                });
 
-            setCategories([]);
-            setCategories(newCategories);
+                setCategories([]);
+                setCategories(newCategories);
+            }
         })
     }
 
     const createCategoryHandler = () => {
         createCategory(newCategory)
         .then(item => {
-            setSuccess(Success.Success);
-            handleClearButton();
+            if(item){
+                setSuccess(Success.Success);
+                handleClearButton();
 
-            categories.unshift(item as Category)
+                categories.unshift(item as Category)
 
-            setCategories([]);
-            setCategories(categories);
+                setCategories([]);
+                setCategories(categories);
+            }
         })
     }
 

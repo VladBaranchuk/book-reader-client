@@ -29,7 +29,7 @@ const SignUp: FC = () => {
     event.preventDefault();
 
     createUser(signUp)
-    .then(result => navigate("/signin"))   
+    .then(result => {if (result) navigate("/signin")})   
   };
 
   const handleUserName = (event: React.ChangeEvent<HTMLInputElement>) => {
