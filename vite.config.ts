@@ -8,5 +8,13 @@ export default defineConfig({
     alias: {
       epubjs: "epubjs/dist/epub.js"
     }
+  },
+  server: {
+    watch: {
+      usePolling: true
+    },
+    host: true,
+    strictPort: true,
+    port: 3000
   }
 });
